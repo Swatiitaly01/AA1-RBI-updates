@@ -4,42 +4,87 @@ class RBISummarizer:
     def __init__(self, api_key):
         openai.api_key = api_key
 
-    def summarize_update(self, update_text):
+    def summarize_updates(self, updates):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
-                {"role": "user", "content": f"Please summarize the following RBI update: {update_text}"}
+                {
+                    'role': 'system',
+                    'content': 'You are an expert in banking and finance.'
+                },
+                {
+                    'role': 'user',
+                    'content': updates
+                }
             ]
         )
         return response['choices'][0]['message']['content']
 
-    def analyze_investment_banking_impact(self, update_text):
+    def analyze_investment_banking_impact(self, update):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
-                {"role": "user", "content": f"Analyze the investment banking impact of the following RBI update: {update_text}"}
+                {
+                    'role': 'system',
+                    'content': 'Analyze the impact of the following RBI update on investment banking.'
+                },
+                {
+                    'role': 'user',
+                    'content': update
+                }
             ]
         )
         return response['choices'][0]['message']['content']
 
-    def categorize_update(self, update_text):
+    def categorize_updates(self, update):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
-                {"role": "user", "content": f"Categorize the following RBI update: {update_text}"}
+                {
+                    'role': 'system',
+                    'content': 'Categorize this RBI update.'
+                },
+                {
+                    'role': 'user',
+                    'content': update
+                }
             ]
         )
         return response['choices'][0]['message']['content']
 
-    def generate_executive_summary(self, update_text, target_audience):
+    def generate_executive_summary(self, updates):
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
-                {"role": "user", "content": f"Generate an executive summary for the following RBI update for {target_audience}: {update_text}"}
+                {
+                    'role': 'system',
+                    'content': 'Generate an executive summary based on the following RBI updates.'
+                },
+                {
+                    'role': 'user',
+                    'content': updates
+                }
             ]
         )
         return response['choices'][0]['message']['content']
 
-# Example usage (to be removed from production):
-# summarizer = RBISummarizer(api_key='your_api_key')
-# print(summarizer.summarize_update('sample RBI update text'))
+    def analyze_impact_on_stakeholders(self, update):
+        perspectives = ['Banks', 'NBFCs', 'AMCs', 'Insurance companies', 'Brokers', 'Fintechs']
+        analyses = {}
+        for perspective in perspectives:
+            response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=[
+                    {
+                        'role': 'system',
+                        'content': f'Analyze the impact of the RBI update on {perspective}.'
+                    },
+                    {
+                        'role': 'user',
+                        'content': update
+                    }
+                ]
+            )
+            analyses[perspective] = response['choices'][0]['message']['content']
+        return analyses
+
